@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Mamma ❤️</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+  color: #76254e;
+  background: linear-gradient(135deg, #ffe0ed, #fff7fb, #e9ddff);
+  text-align: center;
+}
+
+button {
+  border: none;
+  padding: 13px 22px;
+  margin: 7px;
+  border-radius: 30px;
+  background: #d63384;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+button:hover { transform: scale(1.05); }
+
+.screen {
+  min-height: 100vh;
+  padding: 35px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 650px;
+  padding: 30px 22px;
+  border-radius: 28px;
+  background: #ffffffdb;
+  box-shadow: 0 10px 40px #a34a7930;
+}
+
+h1 { font-size: clamp(32px, 7vw, 48px); }
+h2 { color: #c02672; }
+p { line-height: 1.9; font-size: 17px; }
+
+.big { font-size: 75px; }
+
+.hidden { display: none !important; }
+
+.section {
+  padding: 30px 0;
+  border-top: 1px solid #f3c7dc;
+  margin-top: 25px;
+}
+
+#letter {
+  text-align: left;
+  white-space: pre-line;
+}
+
+#heartArea {
+  position: relative;
+  height: 280px;
+  max-width: 450px;
+  margin: 15px auto;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffe2ef, #f1e5ff);
+  overflow: hidden;
+  border: 2px solid #f5c3db;
+}
+
+.heart {
+  position: absolute;
+  font-size: 32px;
+  cursor: pointer;
+  user-select: none;
+  animation: pulse .7s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(.9); }
+  to { transform: scale(1.15); }
+}
+
+#cake {
+  display: inline-block;
+  font-size: 100px;
+  cursor: pointer;
+  transition: transform .3s;
+}
+
+#cake:hover { transform: scale(1.08); }
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  animation: fall 3s linear forwards;
+  font-size: 24px;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(600deg); opacity: 0; }
+}
+
+footer {
+  padding: 20px;
+  color: #a34a79;
+}
+
+@media (max-width: 480px) {
+  .card { padding: 24px 16px; }
+  p { font-size: 16px; }
+}
+</style>
+</head>
+
+<body>
+<div id="confetti"></div>
+
+<!-- OPENING SCREEN -->
+<section class="screen" id="welcome">
+  <main class="card">
+    <div class="big">💗🌷</div>
+    <h1>Hi, Kuttima!</h1>
+    <p>A little surprise has been made just for you.</p>
+    <p>Are you ready, Mamma? 🥹</p>
+    <button onclick="openBirthday()">Open Your Surprise 💌</button>
+  </main>
+</section>
+
+<!-- BIRTHDAY SCREEN -->
+<section class="screen hidden" id="birthday">
+  <main class="card">
+    <div class="big">🎂💖</div>
+    <h1>Happy Birthday, Mamma!</h1>
+    <h2>October 23 — Your Special Day 🌸</h2>
+    <p>
+      The most awaited day is finally here!
+      Happy, happy birthday, Amma!
+      I love you, and we love you! ❤️
+    </p>
+
+    <div class="section">
+      <h2>🎂 A Cake Just for You</h2>
+      <p>Make a wish, Mamma, and tap the cake to cut it!</p>
+      <div id="cake" onclick="cutCake()">🎂</div>
+      <p id="cakeMessage">Your birthday wish is waiting! 💗</p>
+    </div>
+
+    <div class="section">
+      <h2>💖 Catch Hearts for Mamma</h2>
+      <p>Catch as many hearts as you can in 15 seconds!</p>
+      <h2>Score: <span id="score">0</span></h2>
+      <p id="timer">Time: 15 seconds</p>
+      <div id="heartArea">
+        <p id="gameHint">Press Start to play! 💕</p>
+      </div>
+      <button id="startButton" onclick="startGame()">Start Game 💗</button>
+      <p id="gameMessage"></p>
+    </div>
+
+    <div class="section">
+      <h2>💌 A Letter from Your Gunda</h2>
+      <p>One little surprise, with a whole lot of love.</p>
+      <button onclick="revealLetter()">Open My Heart, Amma ❤️</button>
+      <div id="letter" class="hidden">
+        <h2>To My Dearest Mamma 🫂</h2>
+        <p id="letterText"></p>
+      </div>
+    </div>
+  </main>
+</section>
+
+<footer>Made with endless love, by your Gunda ❤️</footer>
+
+<script>
+function openBirthday() {
+  document.getElementById("welcome").classList.add("hidden");
+  document.getElementById("birthday").classList.remove("hidden");
+  celebrate();
+}
+
+function celebrate() {
+  const box = document.getElementById("confetti");
+  const symbols = ["💗", "💕", "✨", "🌸", "🎉"];
+
+  for (let i = 0; i < 35; i++) {
+    const piece = document.createElement("span");
+    piece.className = "confetti-piece";
+    piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.animationDelay = Math.random() * 2 + "s";
+    box.appendChild(piece);
+    setTimeout(() => piece.remove(), 5000);
+  }
+}
+
+function cutCake() {
+  const cake = document.getElementById("cake");
+  const message = document.getElementById("cakeMessage");
+
+  if (cake.textContent === "🎂") {
+    cake.textContent = "🍰";
+    message.textContent =
+      "Happy Birthday, Mamma! Make a beautiful wish! ❤️ I love you so much!";
+    celebrate();
+  } else {
+    message.textContent =
+      "Sending you the biggest birthday hug, Mamma! 🫂💗";
+  }
+}
+
+let score = 0;
+let timeLeft = 15;
+let gameActive = false;
+let gameTimer;
+let heartSpawner;
+
+function startGame() {
+  clearInterval(gameTimer);
+  clearInterval(heartSpawner);
+
+  score = 0;
+  timeLeft = 15;
+  gameActive = true;
+
+  document.getElementById("score").textContent = score;
+  document.getElementById("timer").textContent = "Time: 15 seconds";
+  document.getElementById("gameMessage").textContent = "";
+  document.getElementById("gameHint").classList.add("hidden");
+  document.getElementById("heartArea").innerHTML = "";
+  document.getElementById("startButton").textContent = "Restart Game 🔄";
+
+  spawnHeart();
+
+  heartSpawner = setInterval(spawnHeart, 700);
+
+  gameTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById("timer").textContent =
+      "Time: " + timeLeft + " seconds";
+
+    if (timeLeft <= 0) {
+      endGame();
+    }
+  }, 1000);
+}
+
+function spawnHeart() {
+  if (!gameActive) return;
+
+  const area = document.getElementById("heartArea");
+  const heart = document.createElement("span");
+
+  heart.className = "heart";
+  heart.textContent = ["💖", "💗", "💕", "❤️"][
+    Math.floor(Math.random() * 4)
+  ];
+
+  const maxX = Math.max(0, area.clientWidth - 42);
+  const maxY = Math.max(0, area.clientHeight - 42);
+
+  heart.style.left = Math.random() * maxX + "px";
+  heart.style.top = Math.random() * maxY + "px";
+
+  heart.onclick = function () {
+    if (!gameActive) return;
+    score++;
+    document.getElementById("score").textContent = score;
+    heart.remove();
+  };
+
+  area.appendChild(heart);
+  setTimeout(() => heart.remove(), 1800);
+}
+
+function endGame() {
+  gameActive = false;
+  clearInterval(gameTimer);
+  clearInterval(heartSpawner);
+
+  document.getElementById("heartArea").innerHTML = "💗💖💕";
+  document.getElementById("gameMessage").textContent =
+    "You collected " + score +
+    " hearts! Each one represents my love for you, Mamma! ❤️";
+  document.getElementById("startButton").textContent = "Play Again 🔄";
+}
+
+const letter = `The most awaited day is finally here — October 23rd, my Mamma's birthday!
+
+Happy, happy birthday, Amma! I love you so much, Ma. We love you! ❤️
+
+Amma, you are the one and only precious gift God has given me. No words can fully explain how grateful I am that God brought you into my life.
+
+You became more than just someone I love. You became my Amma, my second parent, my best friend, my comfort zone, and the person whose love makes me feel safe.
+
+I wish you could see yourself through my eyes, Ma. Maybe then you would understand how special you are to me and how much happiness your presence brings into my life.
+
+I miss your lap, your hugs, the way you feed me with your own hands, and the way you call me gunda. Those little moments mean more to me than you could ever imagine. No matter how old I grow, I will always be your gunda.
+
+Thank you for making me feel loved, wanted, and included. Thank you for the beautiful memories, the surprises, the little things you do, and the countless ways you make me feel special. I may not always express it perfectly, but I treasure every bit of your love.
+
+You are my safe place, Amma. You are the person I want to share my happiness with, the person I wish I could sit beside when life feels heavy, and the person whose presence makes everything feel a little better.
+
+I pray that God blesses you with good health, peace, happiness, strength, and countless reasons to smile. You spend so much time caring for others, Ma. I hope life gives you all the love and care that you deserve.
+
+I'm sorry, Ma, that I couldn't buy you big, expensive gifts for your birthday. I wish I could give you the whole world and everything your heart desires.
+
+So I thought of this little idea and decided to make something special for you. Yes, ChatGPT helped me with some of the code, but the idea, the time, the effort, and the love behind this surprise come from me, Amma.
+
+I wanted to create something that would make you smile and remind you how much you mean to me. Maybe this isn't an expensive gift, but the love behind it is so, so big. Every little part of this surprise was made with you in my mind.
+
+If this makes you smile even for a moment, Ma, then every bit of effort will have been worth it.
+
+I may not always find the right words, and I may not always show my feelings perfectly. But please never doubt how deeply I love you. There is so much love for you in this little heart of mine, more than any gift or message could ever explain.
+
+Thank you for being you. Thank you for being my Amma, my comfort, my happiness, and such a beautiful part of my life.
+
+I wish I could celebrate you every day, hug you a little longer, make you smile a little more, and remind you again and again how precious you are to me.
+
+You are not just a gift in my life. You are the one and only precious gift God has given me, and I will forever be grateful to Him for you.
+
+Happy, happy birthday once again, my dearest Amma! I love you, Mamma. I love you, Gundamma. ❤️
+
+Forever your gunda. Always your gunda.
+
+From your Gunda, ❤️🫂`;
+
+function revealLetter() {
+  document.getElementById("letter").classList.remove("hidden");
+  document.getElementById("letterText").textContent = letter;
+}
+</script>
+</body>
+</html>
+<
